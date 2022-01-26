@@ -2,7 +2,6 @@ package main
 
 import (
 	"fb-messenger-go/controllers"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,17 +18,13 @@ func SetupRouter() *gin.Engine {
 	router.SetTrustedProxies(trusted)
 
 	// Ping test
-	router.GET("/ping", func(c *gin.Context) {
-		c.String(http.StatusOK, "pong")
-	})
+	router.GET("/ping", controllers.Ping)
 
 	router.GET("/webhook", controllers.CheckToken)
 	router.POST("/webhook", controllers.Callback)
 
 	// 404
-	router.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusNotFound, gin.H{"message": "Not Found"})
-	})
+	router.NoRoute(controllers.HandleNotFound)
 
 	return router
 }
